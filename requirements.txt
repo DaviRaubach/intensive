@@ -1,1 +1,3 @@
 abjad>=2.21
+docutils
+sphinx
