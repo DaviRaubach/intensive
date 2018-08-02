@@ -53,7 +53,7 @@ class MusicMaker(object):
         total_duration = sum(
             abjad.Duration(pair) for pair in time_signature_pairs
             )
-        talea = abjad.rhythmmakertools.Talea(
+        talea = abjadext.rmakers.Talea(
             counts=counts,
             denominator=denominator,
             )
@@ -94,7 +94,7 @@ class MusicMaker(object):
         Add ``pitches`` to music.
         """
         pitches = abjad.CyclicTuple(pitches)
-        logical_ties = abjad.iterate(music).by_logical_tie(pitched=True)
+        logical_ties = abjad.iterate(music).logical_ties(pitched=True)
         for i, logical_tie in enumerate(logical_ties):
             pitch = pitches[i]
             for note in logical_tie:
@@ -112,13 +112,13 @@ class MusicMaker(object):
 
 slur_attachment_maker = AttachmentMaker(
     attachment=abjad.Slur(),
-    selector=abjad.select().by_leaf().by_run((abjad.Note, abjad.Chord))
+    selector=abjad.select().leaves().runs(),
     )
 
 
 accent_attachment_maker = AttachmentMaker(
     attachment=abjad.Articulation('accent'),
-    selector=abjad.select().by_leaf().by_run((abjad.Note, abjad.Chord))[0]
+    selector=abjad.select().leaves().runs((abjad.Note, abjad.Chord))[0]
     )
 
 

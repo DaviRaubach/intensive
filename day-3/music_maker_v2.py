@@ -10,7 +10,7 @@ pitches = abjad.CyclicTuple([0, 3, 7, 12, 7, 3])
 def make_basic_rhythm(time_signature_pairs, counts, denominator):
     # THIS IS HOW WE MAKE THE BASIC RHYTHM
     total_duration = sum(abjad.Duration(pair) for pair in time_signature_pairs)
-    talea = abjad.rhythmmakertools.Talea(counts=counts, denominator=denominator)
+    talea = abjadext.rmakers.Talea(counts=counts, denominator=denominator)
     talea_index = 0
     all_leaves = []
     current_duration = abjad.Duration(0)
@@ -43,7 +43,7 @@ def clean_up_rhythm(music, time_signature_pairs):
 def add_pitches(music, pitches):
     # THIS IS HOW WE ADD PITCHES
     pitches = abjad.CyclicTuple(pitches)
-    logical_ties = abjad.iterate(music).by_logical_tie(pitched=True)
+    logical_ties = abjad.iterate(music).logical_ties(pitched=True)
     for i, logical_tie in enumerate(logical_ties):
         pitch = pitches[i]
         for note in logical_tie:
@@ -53,7 +53,9 @@ def add_pitches(music, pitches):
 
 def add_attachments(music):
     # THIS IS HOW WE ADD DYNAMICS AND ACCENTS
-    for run in abjad.select(music).by_leaf().by_run((abjad.Note, abjad.Chord)):
+    for run in abjad.select(music).leaves().runs():
+        if not isinstance(run[0], (abjad.Note, abjad.Chord)):
+            continue
         abjad.attach(abjad.Articulation('accent'), run[0])
         if 1 < len(run):
             abjad.attach(abjad.Hairpin('p < f'), run)
