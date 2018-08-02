@@ -2,10 +2,8 @@
 from __future__ import print_function
 import os
 import pytest
-import sys
-import traceback
 import ide
-from abjad.tools import systemtools
+import abjad.system
 abjad_ide = ide.tools.idetools.AbjadIDE()
 
 
@@ -31,7 +29,7 @@ def test_materials_01():
     if not os.path.exists(abbreviations_file_path):
         return
     command = 'python {}'.format(abbreviations_file_path)
-    exit_status = systemtools.IOManager.spawn_subprocess(command)
+    exit_status = abjad.system.IOManager.spawn_subprocess(command)
     assert exit_status == 0
 
 
@@ -39,19 +37,11 @@ def test_materials_01():
 def test_materials_02(material_directory):
     r'''Checks material definition files.
     '''
-    try:
-        abjad_ide.check_definition_file(material_directory)
-    except:
-        traceback.print_exc()
-        sys.exit(1)
+    abjad_ide.check_definition_file(material_directory)
 
 
 @pytest.mark.parametrize('material_directory', material_directories)
 def test_materials_03(material_directory):
     r'''Makes material PDFs.
     '''
-    try:
-        abjad_ide.make_pdf(material_directory)
-    except:
-        traceback.print_exc()
-        sys.exit(1)
+    abjad_ide.make_pdf(material_directory)

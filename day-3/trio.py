@@ -13,7 +13,6 @@ def make_string_trio():
     score = add_pitches(score)
     score = add_attachments(score)
     score = add_midi_instruments(score)
-    #return score
     lilypond_file = prettify_score(score)
     return lilypond_file
 

@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
-from abjad import Clef
-from abjad import Score
-from abjad import Staff
-from abjad import StaffGroup
-from abjad import Voice
-from abjad import attach
-from abjad import instrumenttools
-from abjad import schemetools
-from abjad import set_
-from abjad.tools.indicatortools import LilyPondCommand
+import abjad
 
 
 class ScoreTemplate(object):
@@ -16,52 +7,57 @@ class ScoreTemplate(object):
     def __call__(self):
 
         # Violin
-        violin_staff = Staff(
-            [Voice(name='Violin Voice')],
+        violin_staff = abjad.Staff(
+            [abjad.Voice(name='Violin Voice')],
             name='Violin Staff',
-            context_name='ViolinStaff',
+            lilypond_type='ViolinStaff',
             )
-        violin_tag = LilyPondCommand(r"tag #'violin", format_slot='before')
-        attach(violin_tag, violin_staff)
-        attach(Clef('treble'), violin_staff)
-        attach(instrumenttools.Violin(), violin_staff)
-        set_(violin_staff).midi_instrument = schemetools.Scheme(
+        violin_tag = abjad.LilyPondLiteral(r"\tag #'violin", format_slot='before')
+        abjad.attach(violin_tag, violin_staff)
+        abjad.setting(violin_staff).midi_instrument = abjad.scheme.Scheme(
             'violin', force_quotes=True)
 
         # Viola
-        viola_staff = Staff(
-            [Voice(name='Viola Voice')],
+        viola_staff = abjad.Staff(
+            [abjad.Voice(name='Viola Voice')],
             name='Viola Staff',
-            context_name='ViolaStaff',
+            lilypond_type='ViolaStaff',
             )
-        viola_tag = LilyPondCommand(r"tag #'viola", format_slot='before')
-        attach(viola_tag, viola_staff)
-        attach(Clef('alto'), viola_staff)
-        attach(instrumenttools.Viola(), viola_staff)
-        set_(viola_staff).midi_instrument = schemetools.Scheme(
+        viola_tag = abjad.LilyPondLiteral(r"\tag #'viola", format_slot='before')
+        abjad.attach(viola_tag, viola_staff)
+        abjad.setting(viola_staff).midi_instrument = abjad.scheme.Scheme(
             'viola', force_quotes=True)
 
         # Cello
-        cello_staff = Staff(
-            [Voice(name='Cello Voice')],
+        cello_staff = abjad.Staff(
+            [abjad.Voice(name='Cello Voice')],
             name='Cello Staff',
-            context_name='CelloStaff',
+            lilypond_type='CelloStaff',
             )
-        cello_tag = LilyPondCommand(r"tag #'cello", format_slot='before')
-        attach(cello_tag, cello_staff)
-        attach(Clef('bass'), cello_staff)
-        attach(instrumenttools.Cello(), cello_staff)
-        set_(cello_staff).midi_instrument = schemetools.Scheme(
+        cello_tag = abjad.LilyPondLiteral(r"\tag #'cello", format_slot='before')
+        abjad.attach(cello_tag, cello_staff)
+        abjad.setting(cello_staff).midi_instrument = abjad.scheme.Scheme(
             'cello', force_quotes=True)
 
         # Everything else
-        staff_group = StaffGroup(
+        staff_group = abjad.StaffGroup(
             [violin_staff, viola_staff, cello_staff],
             name='Trio Staff Group',
             )
-        score = Score(
+        score = abjad.Score(
             [staff_group],
             name='Trio Score',
             )
 
         return score
+
+    def attach(self, score):
+        violin_staff = score['Violin Staff']
+        viola_staff = score['Viola Staff']
+        cello_staff = score['Cello Staff']
+        abjad.attach(abjad.Clef('bass'), abjad.select(cello_staff).leaves()[0])
+        abjad.attach(abjad.instruments.Cello(), abjad.select(cello_staff).leaves()[0])
+        abjad.attach(abjad.Clef('alto'), abjad.select(viola_staff).leaves()[0])
+        abjad.attach(abjad.instruments.Viola(), abjad.select(viola_staff).leaves()[0])
+        abjad.attach(abjad.Clef('treble'), abjad.select(violin_staff).leaves()[0])
+        abjad.attach(abjad.instruments.Violin(), abjad.select(violin_staff).leaves()[0])

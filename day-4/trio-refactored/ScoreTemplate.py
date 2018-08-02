@@ -1,27 +1,21 @@
 # -*- encoding: utf-8 -*-
-from abjad import *
+import abjad
 
 
 class ScoreTemplate(object):
 
     def __call__(self):
         # Violin
-        violin_voice = Voice()
-        violin_staff = Staff([violin_voice], name='Violin Staff')
-        attach(Clef('treble'), violin_staff)
-        attach(instrumenttools.Violin(), violin_staff)
+        violin_voice = abjad.Voice()
+        violin_staff = abjad.Staff([violin_voice], name='Violin Staff')
         # Viola
-        viola_voice = Voice()
-        viola_staff = Staff([viola_voice], name='Viola Staff')
-        attach(Clef('alto'), viola_staff)
-        attach(instrumenttools.Viola(), viola_staff)
+        viola_voice = abjad.Voice()
+        viola_staff = abjad.Staff([viola_voice], name='Viola Staff')
         # Cello
-        cello_voice = Voice()
-        cello_staff = Staff([cello_voice], name='Cello Staff')
-        attach(Clef('bass'), cello_staff)
-        attach(instrumenttools.Cello(), cello_staff)
+        cello_voice = abjad.Voice()
+        cello_staff = abjad.Staff([cello_voice], name='Cello Staff')
         # Everything else
-        staff_group = StaffGroup([violin_staff, viola_staff, cello_staff])
-        score = Score([staff_group])
+        staff_group = abjad.StaffGroup([violin_staff, viola_staff, cello_staff])
+        score = abjad.Score([staff_group])
         # Return the score
         return score
