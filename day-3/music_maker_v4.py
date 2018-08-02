@@ -136,13 +136,13 @@ for music_maker in (
 
 piano_staff = abjad.StaffGroup(
     [upper_staff, lower_staff],
-    context_name='PianoStaff',
+    lilypond_type='PianoStaff',
     )
 
 score = abjad.Score([piano_staff])
 score.add_final_bar_line()
 lilypond_file = abjad.LilyPondFile.new(score)
-lilypond_file.header_block.composer = 'Abjad Summer Course'
+lilypond_file.header_block.composer = abjad.Markup('Abjad Summer Course')
 title_markup = abjad.Markup("L'ÉTUDE CCRMA").bold().fontsize(8)
 lilypond_file.header_block.title = title_markup
-lilypond_file.header_block.subtitle = 'This is the Subtitle'
+lilypond_file.header_block.subtitle = abjad.Markup('This is the Subtitle')

@@ -83,3 +83,7 @@ class MusicMaker(object):
         music = self.add_pitches(music, self.pitches)
         music = self.add_attachments(music)
         return music
+
+
+music_maker_a = MusicMaker(counts=[1], denominator=16, pitches=[0, 1, 2])
+music_maker_b = MusicMaker(counts=[1, 2, -3, 8], denominator=32, pitches=[12, 23])

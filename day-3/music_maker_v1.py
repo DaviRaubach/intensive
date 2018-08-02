@@ -43,9 +43,8 @@ for i, shard in enumerate(shards):
 # pitches = abjad.CyclicTuple(["d'", "a''", "gs'", "fs'"])
 # pitches = abjad.CyclicTuple(["c'", "c''"])
 # pitches = abjad.CyclicTuple([0, 2, 4, 5, 7, 9, 11, 12])
+
 pitches = abjad.CyclicTuple([0, 3, 7, 12, 7, 3])
-
-
 logical_ties = abjad.iterate(music).logical_ties(pitched=True)
 for i, logical_tie in enumerate(logical_ties):
     pitch = pitches[i]

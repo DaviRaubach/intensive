@@ -1,5 +1,6 @@
 import abjad
 import copy
+import abjadext.rmakers
 
 
 class AttachmentMaker(object):
@@ -84,7 +85,7 @@ class MusicMaker(object):
         for i, shard in enumerate(shards):
             time_signature_pair = time_signature_pairs[i]
             measure = abjad.Measure(time_signature_pair)
-            assert shard.get_duration() == abjad.Duration(
+            assert abjad.inspect(shard).duration() == abjad.Duration(
                 time_signature_pair)
             abjad.mutate(shard).wrap(measure)
         return music
@@ -118,7 +119,7 @@ slur_attachment_maker = AttachmentMaker(
 
 accent_attachment_maker = AttachmentMaker(
     attachment=abjad.Articulation('accent'),
-    selector=abjad.select().leaves().runs((abjad.Note, abjad.Chord))[0]
+    selector=abjad.select().leaves().runs().map(abjad.select()[0])
     )
 
 
