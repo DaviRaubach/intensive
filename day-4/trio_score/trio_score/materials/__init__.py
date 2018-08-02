@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from abjad.tools import systemtools
+import abjad.system
 
-systemtools.ImportManager.import_material_packages(
+abjad.system.ImportManager.import_material_packages(
     __path__[0],
     globals(),
     )

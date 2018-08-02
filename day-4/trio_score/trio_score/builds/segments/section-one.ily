@@ -1,17 +1,3 @@
-\version "2.19.82"
-\language "english"
-
-\include "../../stylesheets/stylesheet.ily"
-
-\header {
-    tagline = ##f
-}
-
-\layout {}
-
-\paper {}
-
-\score {
     \context Score = "Trio Score"
     <<
         \context StaffGroup = "Trio Staff Group"
@@ -277,4 +263,3 @@
             }
         >>
     >>
-}

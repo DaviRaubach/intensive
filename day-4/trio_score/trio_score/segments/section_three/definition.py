@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import abjad
+import abjadext.rmakers
 import os
 from trio_score import materials
 from trio_score.tools import SegmentMaker
@@ -10,10 +11,10 @@ segment_maker = SegmentMaker(
     cello_pitches=materials.my_pitches.transpose(-12).invert(-12),
     cello_rhythm_maker=materials.my_fast_rhythm_maker,
     cello_seed=2,
-    viola_pitches=abjad.pitchtools.PitchSegment('c ef'),
-    viola_rhythm_maker=abjad.rhythmmakertools.NoteRhythmMaker(),
+    viola_pitches=abjad.pitch.PitchSegment('c ef'),
+    viola_rhythm_maker=abjadext.rmakers.NoteRhythmMaker(),
     violin_pitches=materials.my_pitches.retrograde(),
-    violin_rhythm_maker=abjad.rhythmmakertools.EvenDivisionRhythmMaker(
+    violin_rhythm_maker=abjadext.rmakers.EvenDivisionRhythmMaker(
         denominators=[8],
         extra_counts_per_division=[0, 1, 2],
         ),
@@ -29,4 +30,4 @@ if __name__ == '__main__':
         'illustration.pdf',
         )
     abjad.persist(lilypond_file).as_pdf(illustration_path)
-    abjad.systemtools.IOManager.open_file(illustration_path)
+    abjad.system.IOManager.open_file(illustration_path)

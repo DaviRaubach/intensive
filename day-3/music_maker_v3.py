@@ -1,11 +1,11 @@
 import abjad
+import abjadext.rmakers
 
 # THIS IS THE INPUT TO MY MUSICAL IDEA
 time_signature_pairs = [(4, 4), (3, 4), (7, 16), (6, 8)]
 counts = [1, 2, -3, 4]
 denominator = 16
 pitches = abjad.CyclicTuple([0, 3, 7, 12, 7, 3])
-
 
 
 class MusicMaker(object):
@@ -20,7 +20,7 @@ class MusicMaker(object):
         total_duration = sum(
             abjad.Duration(pair) for pair in time_signature_pairs
             )
-        talea = abjad.rhythmmakertools.Talea(
+        talea = abjadext.rmakers.Talea(
             counts=counts,
             denominator=denominator,
             )
@@ -36,13 +36,12 @@ class MusicMaker(object):
             leaf_duration = abs(leaf_duration)
             if (leaf_duration + current_duration) > total_duration:
                 leaf_duration = total_duration - current_duration
-            current_leaves = abjad.LeafMaker()([pitch], [leaf_duration])  
+            current_leaves = abjad.LeafMaker()([pitch], [leaf_duration])
             all_leaves.extend(current_leaves)
             current_duration += leaf_duration
             talea_index += 1
-        music = abjad.Container(all_leaves) 
+        music = abjad.Container(all_leaves)
         return music
-
 
     def clean_up_rhythm(self, music, time_signature_pairs):
         # THIS IS HOW WE CLEAN UP THE RHYTHM
@@ -51,30 +50,28 @@ class MusicMaker(object):
             measure = abjad.Measure(time_signature_pairs[i])
             abjad.mutate(shard).wrap(measure)
         return music
-            
 
     def add_pitches(self, music, pitches):
         # THIS IS HOW WE ADD PITCHES
         pitches = abjad.CyclicTuple(pitches)
-        logical_ties = abjad.iterate(music).by_logical_tie(pitched=True)
+        logical_ties = abjad.iterate(music).logical_ties(pitched=True)
         for i, logical_tie in enumerate(logical_ties):
             pitch = pitches[i]
             for note in logical_tie:
                 note.written_pitch = pitch
         return music
 
-
     def add_attachments(self, music):
         # THIS IS HOW WE ADD DYNAMICS AND ACCENTS
-        for run in abjad.select(music).by_leaf().by_run(
-            (abjad.Note, abjad.Chord)):
+        for run in abjad.select(music).leaves().runs():
+            if not isinstance(run[0], (abjad.Note, abjad.Chord)):
+                continue
             abjad.attach(abjad.Articulation('accent'), run[0])
             if 1 < len(run):
                 abjad.attach(abjad.Hairpin('p < f'), run)
             else:
                 abjad.attach(abjad.Dynamic('ppp'), run[0])
         return music
-
 
     def make_music(self, time_signature_pairs):
         music = self.make_basic_rhythm(
@@ -86,3 +83,7 @@ class MusicMaker(object):
         music = self.add_pitches(music, self.pitches)
         music = self.add_attachments(music)
         return music
+
+
+music_maker_a = MusicMaker(counts=[1], denominator=16, pitches=[0, 1, 2])
+music_maker_b = MusicMaker(counts=[1, 2, -3, 8], denominator=32, pitches=[12, 23])

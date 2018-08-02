@@ -23,4 +23,4 @@ if __name__ == '__main__':
         'illustration.pdf',
         )
     abjad.persist(lilypond_file).as_pdf(illustration_path)
-    abjad.systemtools.IOManager.open_file(illustration_path)
+    abjad.system.IOManager.open_file(illustration_path)

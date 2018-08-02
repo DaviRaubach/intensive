@@ -1,14 +1,6 @@
 # -*- coding: utf-8 -*-
 import collections
-from abjad import Measure
-from abjad import MultimeasureRest
-from abjad import Multiplier
-from abjad import TimeSignature
-from abjad import Voice
-from abjad import attach
-from abjad import iterate
-from abjad import mutate
-from abjad.tools import lilypondfiletools
+import abjad
 from trio_score.tools import ScoreTemplate
 
 
@@ -28,7 +20,7 @@ class SegmentMaker(object):
         cello_seed=None,
         is_last_segment=False,
         ):
-        time_signatures = [TimeSignature(_) for _ in time_signatures]
+        time_signatures = [abjad.TimeSignature(_) for _ in time_signatures]
         assert len(time_signatures)
         self.time_signatures = time_signatures
         self.violin_pitches = violin_pitches
@@ -74,7 +66,8 @@ class SegmentMaker(object):
             score.add_final_bar_line('|.', to_each_voice=True)
         else:
             score.add_final_bar_line('||', to_each_voice=True)
-        lilypond_file = lilypondfiletools.make_basic_lilypond_file(
+        self.score_template.attach(score)
+        lilypond_file = abjad.LilyPondFile.new(
             score,
             includes=['../../stylesheets/stylesheet.ily'],
             )
@@ -82,19 +75,20 @@ class SegmentMaker(object):
 
     def _make_measures(self, time_signatures, rhythm_maker, pitches, seed):
         seed = seed or 0
-        measures = Voice()
+        measures = abjad.Voice()
         for time_signature in time_signatures:
-            multimeasure_rest = MultimeasureRest(1)
-            multiplier = Multiplier(time_signature)
-            attach(multiplier, multimeasure_rest)
-            measures.append(Measure(time_signature, [multimeasure_rest]))
+            multimeasure_rest = abjad.MultimeasureRest(1)
+            multiplier = abjad.Multiplier(time_signature)
+            abjad.attach(multiplier, multimeasure_rest)
+            measures.append(abjad.Measure(time_signature, [multimeasure_rest]))
         if rhythm_maker is not None:
-            divisions = rhythm_maker(time_signatures, rotation=seed)
-            mutate(measures).replace_measure_contents(divisions)
+            # rotation not available anymore
+            divisions = rhythm_maker(time_signatures)
+            abjad.mutate(measures).replace_measure_contents(divisions)
         if pitches is not None:
             if not isinstance(pitches, collections.Iterable):
                 pitches = [pitches]
-            iterator = iterate(measures).by_logical_tie(pitched=True)
+            iterator = abjad.iterate(measures).logical_ties(pitched=True)
             iterator = enumerate(iterator, seed)
             for i, logical_tie in iterator:
                 pitch = pitches[i % len(pitches)]
