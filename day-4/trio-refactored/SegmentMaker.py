@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 import abjad
 import abjadext.rmakers
 
@@ -8,7 +7,7 @@ class SegmentMaker(object):
     def __init__(self, durations):
         self.durations = durations
         self.rhythm_maker = abjadext.rmakers.TaleaRhythmMaker(
-            talea=abjadext.rmakers.Talea([1, 2, 3, -1], 8),
+            talea=abjadext.rmakers.Talea(counts=[1, 2, 3, -1], denominator=8),
             )
 
     def __call__(self):

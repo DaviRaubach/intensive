@@ -36,18 +36,27 @@
         \name ViolinStaff
         \type Engraver_group
         \alias Staff
+        \override NoteHead.color = #blue
+        instrumentName = "Violin"
+        shortInstrumentName = "Vn."
     }
     \context {
         \Staff 
         \name ViolaStaff
         \type Engraver_group
         \alias Staff
+        \override NoteHead.color = #green
+        instrumentName = "Viola"
+        shortInstrumentName = "Va."
     }
     \context {
         \Staff 
         \name CelloStaff
         \type Engraver_group
         \alias Staff
+        \override NoteHead.color = #red
+        instrumentName = "Cello"
+        shortInstrumentName = "Yo yo yo yo"
     }
     \context {
         \StaffGroup

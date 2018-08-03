@@ -3,9 +3,9 @@ SHELL = /bin/bash
 .PHONY: materials segments
 
 collect:
-	rm -f build/segments/*.ly;
+	rm -f builds/segments/*.ly;
 	cd segments && for segment in section_*; do \
-		sed '/^\\score/,/^\}/!d;/^\\score/d;/^\}/d' $$segment/illustration.ly > ../build/segments/$${segment/_/-}.ily; \
+		sed '/^\\score/,/^\}/!d;/^\\score/d;/^\}/d' $$segment/illustration.ly > ../builds/segments/$${segment/_/-}.ily; \
 	done;
 
 segments:
